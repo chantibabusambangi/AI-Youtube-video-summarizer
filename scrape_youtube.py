@@ -11,12 +11,21 @@ def extract_video_id(url):
         return match.group(1)
     else:
         raise ValueError("Invalid YouTube URL")
+
 def extract_metadata(url):
-    r = requests.get(url)
-    soup = BeautifulSoup(r.text, features="html.parser")
-    title = soup.find("title").text
-    channel = soup.find("link", itemprop="name")['content']
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, 'html.parser')
+
+    # Extract title
+    title_tag = soup.find("meta", property="og:title")
+    title = title_tag['content'] if title_tag else "Unknown Title"
+
+    # Extract channel name more robustly
+    channel_tag = soup.find("link", itemprop="name")
+    channel = channel_tag['content'] if channel_tag and 'content' in channel_tag.attrs else "Unknown Channel"
+
     return title, channel
+
 def download_thumbnail(video_id):
     image_url = f"https://img.youtube.com/vi/{video_id}/hqdefault.jpg"
     img_data = requests.get(image_url).content
