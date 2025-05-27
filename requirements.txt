@@ -1,8 +1,8 @@
-streamlit
-transformers
-huggingface_hub
-youtube_transcript_api
-beautifulsoup4
+streamlit==1.33.0
 requests
+beautifulsoup4
+youtube-transcript-api
+transformers
 python-dotenv
-torch
+huggingface_hub
+
