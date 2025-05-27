@@ -1,0 +1,7 @@
+streamlit
+transformers
+huggingface_hub
+youtube_transcript_api
+beautifulsoup4
+requests
+python-dotenv
