@@ -15,16 +15,16 @@ def extract_video_id(url):
 def extract_metadata(url):
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
+    title = soup.title.string.strip()
 
-    # Extract title
-    title_tag = soup.find("meta", property="og:title")
-    title = title_tag['content'] if title_tag else "Unknown Title"
-
-    # Extract channel name more robustly
-    channel_tag = soup.find("link", itemprop="name")
-    channel = channel_tag['content'] if channel_tag and 'content' in channel_tag.attrs else "Unknown Channel"
+    channel_tag = soup.find("meta", itemprop="channelId")
+    if channel_tag and channel_tag.get("content"):
+        channel = channel_tag["content"]
+    else:
+        channel = "Unknown Channel"
 
     return title, channel
+
 
 def download_thumbnail(video_id):
     image_url = f"https://img.youtube.com/vi/{video_id}/hqdefault.jpg"
