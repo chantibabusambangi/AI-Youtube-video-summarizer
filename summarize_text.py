@@ -1,41 +1,48 @@
 import os
 import requests
-
-
-#only added hugging facehub and client lines two lines
 from huggingface_hub import InferenceClient
-# Choose your preferred model (BART, Pegasus, T5, etc.)
+
+# Constants
 API_URL = "https://api-inference.huggingface.co/models/facebook/bart-large-cnn"
+HF_API_KEY = os.getenv("HF_API_KEY")
+if not HF_API_KEY:
+    raise EnvironmentError("HF_API_KEY environment variable not set.")
+
 headers = {
-    "Authorization": f"Bearer {os.getenv('HF_API_KEY')}"  # Your Hugging Face token
+    "Authorization": f"Bearer {HF_API_KEY}"
 }
 
 def summarize_text(text, lang='en'):
-    client = InferenceClient(token=os.getenv("HF_API_KEY"))
-    # Truncate long text to avoid API limit issues (optional enhancement: chunking)
+    # Initialize client
+    client = InferenceClient(token=HF_API_KEY)
+
+    # Optional truncation
     if len(text) > 3000:
         text = text[:3000]
 
+    # Clear & model-friendly prompt
     prompt = f"""
-    Summarize the following YouTube transcript in {lang}. Provide:
-    Summary:
-    (short summary)
+You are an expert assistant. Summarize the following YouTube transcript in {lang}.
 
-    Key Takeaways:
-    - (bullet points)
-    
-    Transcript:
-    {text}
-    """
+Summary (1-2 lines):
 
-    payload = {"inputs": prompt}
-    response = requests.post(API_URL, headers=headers, json=payload)
+Key Takeaways (3-5 bullet points):
 
-    if response.status_code != 200:
-        return f"Error: {response.status_code} - {response.text}"
+Transcript:
+{text}
+"""
 
     try:
-        summary_text = response.json()[0]['summary_text']
-        return summary_text
-    except:
-        return f"Unexpected error. Response: {response.text}"
+        response = requests.post(API_URL, headers=headers, json={"inputs": prompt}, timeout=60)
+
+        if response.status_code != 200:
+            return f"[Error {response.status_code}] {response.text}"
+
+        result = response.json()
+        if isinstance(result, list) and 'summary_text' in result[0]:
+            return result[0]['summary_text'].strip()
+        else:
+            return f"[Unexpected response format] {result}"
+
+    except Exception as e:
+        return f"Exception occurred: {e}"
