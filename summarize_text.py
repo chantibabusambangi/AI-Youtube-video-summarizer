@@ -5,7 +5,13 @@ import requests
 #only added hugging facehub and client lines two lines
 from huggingface_hub import InferenceClient
 # Choose your preferred model (BART, Pegasus, T5, etc.)
+
+
 API_URL = "https://api-inference.huggingface.co/models/facebook/bart-large-cnn"
+HF_API_KEY = os.getenv("HF_API_KEY")
+if not HF_API_KEY:
+    raise EnvironmentError("HF_API_KEY environment variable not set.")
+
 headers = {
     "Authorization": f"Bearer {os.getenv('HF_API_KEY')}"  # Your Hugging Face token
 }
