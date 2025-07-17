@@ -30,7 +30,7 @@ def main():
         summary = summarize_text(transcript, lang=lang)
         return summary
 
-    st.subheader("Enter YouTube URL:")
+    st.subheader("Enter YouTube URL Now:")
     st.write("Paste a YouTube link to summarize its content (must have a transcript available)")
     url = st.text_input("URL")
     language = st.radio("Select language to output:", ('English', 'Spanish', 'Korean'))
