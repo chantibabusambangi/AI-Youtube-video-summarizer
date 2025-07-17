@@ -7,7 +7,7 @@ from langchain_community.chat_models import ChatGroq  # from langchain-community
 # Initialize Groq LLM
 llm = ChatGroq(
     temperature=0.3,
-    model_name="mixtral-8x7b-32768",  # or "llama3-70b-8192"
+    model_name="qwen/qwen3-32b",  # or "llama3-70b-8192"
     groq_api_key=os.getenv("GROQ_API_KEY")
 )
 
