@@ -1,6 +1,6 @@
 import streamlit as st
 from scrape_youtube import extract_video_id, get_transcript, extract_metadata, download_thumbnail
-from summarize_text import summarize_text
+from summarize_text1 import summarize_text
 import os
 
 def main():
