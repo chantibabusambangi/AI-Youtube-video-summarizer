@@ -5,4 +5,3 @@ youtube-transcript-api
 transformers
 python-dotenv
 huggingface_hub
-
